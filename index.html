@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0xLove - Gửi Em</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <style>
+    body {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    .typing {
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #00ff88;
+      animation: blink 0.75s step-end infinite;
+    }
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      animation: hackIn 0.5s ease-out;
+      background: #16213e;
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+    @keyframes hackIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .glitch {
+      position: relative;
+      color: #00ff88;
+      animation: glitch 1s linear infinite;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .glitch::before {
+      color: #ff00ff;
+      animation: glitch-top 1s linear infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    }
+    .glitch::after {
+      color: #00ffff;
+      animation: glitch-bottom 1.5s linear infinite;
+      clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+    }
+    @keyframes glitch {
+      2%, 64% { transform: translate(2px, 0) skew(0deg); }
+      4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+      62% { transform: translate(0, 0) skew(5deg); }
+    }
+    @keyframes glitch-top {
+      2%, 64% { transform: translate(2px, -2px); }
+      4%, 60% { transform: translate(-2px, 2px); }
+      62% { transform: translate(0, 0) skew(-5deg); }
+    }
+    @keyframes glitch-bottom {
+      2%, 64% { transform: translate(-2px, 2px); }
+      4%, 60% { transform: translate(2px, -2px); }
+      62% { transform: translate(0, 0) skew(5deg); }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen text-center">
+  <div id="particles-js"></div>
+  <div class="p-8 max-w-lg mx-auto bg-gray-900 bg-opacity-80 rounded-xl shadow-2xl border border-green-400 transform transition-all hover:scale-105">
+    <h1 class="text-4xl font-bold mb-6 glitch" data-text="0xLove - Gửi Em">0xLove - Gửi Em</h1>
+    <p id="typing-text" class="text-green-400 text-lg mb-8 typing"></p>
+    <button id="reveal-btn" class="bg-gradient-to-r from-green-500 to-cyan-500 text-black px-8 py-3 rounded-lg hover:from-green-600 hover:to-cyan-600 transition duration-300 transform hover:scale-110">
+      Decrypt Trái Tim Anh
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content p-8 rounded-xl max-w-md mx-auto text-center">
+      <h2 class="text-2xl font-bold text-green-400 mb-4 glitch" data-text="Lời Anh Muốn Nói...">Lời Anh Muốn Nói...</h2>
+      <p class="text-gray-300 mb-6">
+        Em à, trong "code" cuộc đời anh, em là biến số duy nhất khiến mọi hàm đều trả về hạnh phúc. Nụ cười của em là API hoàn hảo, kết nối thẳng vào trái tim anh. Anh không hứa debug hết mọi lỗi của cuộc sống, nhưng anh hứa sẽ commit cả đời để yêu thương và đồng hành cùng em. Em có muốn cùng anh "push" một branch tình yêu không? 💾
+      </p>
+      <button id="close-modal" class="bg-green-500 text-black px-6 py-2 rounded-lg hover:bg-green-600 transition duration-300">
+        Exit
+      </button>
+    </div>
+  </div>
+
+  <audio id="click-sound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+
+  <script>
+    // Khởi tạo particles.js
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 100, density: { enable: true, value_area: 800 } },
+        color: { value: '#00ff88' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#00ff88', opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2, direction: 'none', random: true }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+        modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+      }
+    });
+
+    // Hiệu ứng gõ chữ
+    const text = "Initializing love protocol for you...";
+    let index = 0;
+    const typingText = document.getElementById('typing-text');
+    function type() {
+      if (index < text.length) {
+        typingText.textContent += text.charAt(index);
+        index++;
+        setTimeout(type, 100);
+      }
+    }
+    window.onload = type;
+
+    // Xử lý nút bấm và modal
+    const modal = document.getElementById('modal');
+    const revealBtn = document.getElementById('reveal-btn');
+    const closeModal = document.getElementById('close-modal');
+    const clickSound = document.getElementById('click-sound');
+
+    revealBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+      clickSound.play();
+      revealBtn.classList.add('hidden');
+    });
+
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+      clickSound.play();
+      revealBtn.classList.remove('hidden');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        clickSound.play();
+        revealBtn.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
